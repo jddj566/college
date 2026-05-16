@@ -46,11 +46,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Ensure temp audio directory exists
-os.makedirs(settings.temp_audio_dir, exist_ok=True)
-
-# Mount static directory for audio files
-app.mount("/audio", StaticFiles(directory=settings.temp_audio_dir), name="audio")
+# Handle temp audio and static mounting
+if not os.environ.get("VERCEL"):
+    # Ensure temp audio directory exists
+    os.makedirs(settings.temp_audio_dir, exist_ok=True)
+    # Mount static directory for audio files
+    app.mount("/audio", StaticFiles(directory=settings.temp_audio_dir), name="audio")
+else:
+    logger.info("Running on Vercel: skipping static audio mounting and directory creation")
 
 # Include API routes
 app.include_router(qa.router, prefix="/qa", tags=["qa"])
