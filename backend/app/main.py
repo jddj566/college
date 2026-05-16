@@ -70,15 +70,12 @@ app.include_router(admin.router, prefix="/admin", tags=["admin"])
 
 # Serve Frontend Static Files (if they exist and not on Vercel)
 frontend_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "dist")
-logger.info(f"Searching for frontend at: {frontend_path}")
 if not os.environ.get("VERCEL") and os.path.exists(frontend_path):
     logger.info("Frontend directory found. Mounting static files.")
     app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
 else:
-    logger.info("Skipping frontend mounting (either on Vercel or dist not found).")
-    @app.get("/")
-    async def root():
-        return {"message": "College Voice Agent API is running!"}
+    logger.info("Skipping frontend mounting (on Vercel or dist not found). Backend root disabled.")
+    # No root route here on Vercel - let vercel.json handle routing to frontend/dist/index.html
 
 if __name__ == "__main__":
     import uvicorn
