@@ -2,7 +2,7 @@
   "name": "college-voice-agent-root",
   "version": "1.0.0",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build",
+    "build": "cd frontend && npm install && npm run build && cp -r dist/* ../",
     "install": "cd frontend && npm install"
   }
 }

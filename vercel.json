@@ -6,14 +6,11 @@
       "destination": "api/index.py"
     },
     {
-      "source": "/(.*)",
-      "destination": "frontend/dist/$1"
-    }
-  ],
-  "redirects": [
+      "handle": "filesystem"
+    },
     {
-      "source": "/index.html",
-      "destination": "/"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
