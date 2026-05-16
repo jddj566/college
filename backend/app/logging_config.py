@@ -1,4 +1,3 @@
-
 import logging
 import logging.handlers
 import json
@@ -30,22 +29,27 @@ def setup_logging(log_dir: str = "logs", log_level: str = "INFO"):
     """
     Configure logging to write to console and rotating file.
     """
-    log_path = Path(log_dir)
-    log_path.mkdir(exist_ok=True)
-    
     # Root logger
     logger = logging.getLogger()
     logger.setLevel(log_level)
-    
+
     # Clear existing handlers
     logger.handlers = []
-    
+
     # Console Handler (Human readable)
     console_handler = logging.StreamHandler()
     console_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     console_handler.setFormatter(console_format)
     logger.addHandler(console_handler)
-    
+
+    # Skip file logging on Vercel as filesystem is read-only
+    if os.environ.get("VERCEL"):
+        logging.info("Running on Vercel: skipping file logging handlers")
+        return
+
+    log_path = Path(log_dir)
+    log_path.mkdir(exist_ok=True)
+
     # File Handler (JSON structured for parsing)
     file_handler = logging.handlers.RotatingFileHandler(
         log_path / "app.log",
@@ -73,4 +77,3 @@ def setup_logging(log_dir: str = "logs", log_level: str = "INFO"):
     logging.getLogger("app.services").setLevel(logging.DEBUG)
     
     logging.info("Logging configured successfully")
-
