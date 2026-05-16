@@ -35,35 +35,36 @@ class Settings(BaseSettings):
     secret_key: str = os.getenv("SECRET_KEY", "supersecretkey")
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
-    
+
     # Direct Groq client initialization
     groq_client: Optional[Any] = None
-    
+
     # Gemini settings
     gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
     gemini_temperature: float = float(os.getenv("GEMINI_TEMPERATURE", "0.3"))
     gemini_max_tokens: int = int(os.getenv("GEMINI_MAX_TOKENS", "500"))
-    
+
     # Directories
     chroma_persist_dir: str = os.getenv("CHROMA_PERSIST_DIR", "/tmp/chroma_db" if os.environ.get("VERCEL") else "chroma_db")
     upload_dir: str = os.getenv("UPLOAD_DIR", "/tmp/uploads" if os.environ.get("VERCEL") else "uploads")
     temp_audio_dir: str = os.getenv("TEMP_AUDIO_DIR", "/tmp/temp_audio" if os.environ.get("VERCEL") else "temp_audio")
-    
+    backup_dir: str = os.getenv("BACKUP_DIR", "/tmp/backups" if os.environ.get("VERCEL") else "backups")
+
     # CORS settings
     cors_origins: List[str] = ["*"]  # In production, specify exact origins
-    
+
     # College information
     college_name: str = os.getenv("COLLEGE_NAME", "Dr. B.C. Roy Engineering College")
     admissions_phone: str = os.getenv("ADMISSIONS_PHONE", "0343-2501353")
     support_email: str = os.getenv("SUPPORT_EMAIL", "info@bcrec.ac.in")
-    
+
     class Config:
         env_file = ".env"
         extra = "ignore"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        
+
         # Initialize Groq client if API key is available and library is installed
         if GROQ_AVAILABLE and self.groq_api_key:
             try:
