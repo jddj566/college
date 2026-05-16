@@ -46,7 +46,7 @@ class Settings(BaseSettings):
     
     # Directories
     chroma_persist_dir: str = os.getenv("CHROMA_PERSIST_DIR", "/tmp/chroma_db" if os.environ.get("VERCEL") else "chroma_db")
-    upload_dir: str = os.getenv("UPLOAD_DIR", "uploads")
+    upload_dir: str = os.getenv("UPLOAD_DIR", "/tmp/uploads" if os.environ.get("VERCEL") else "uploads")
     temp_audio_dir: str = os.getenv("TEMP_AUDIO_DIR", "/tmp/temp_audio" if os.environ.get("VERCEL") else "temp_audio")
     
     # CORS settings

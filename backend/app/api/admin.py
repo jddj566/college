@@ -27,9 +27,12 @@ async def upload_files(
     Upload files to the server and process them in the background.
     """
     uploaded_files = []
-    
-    os.makedirs(settings.upload_dir, exist_ok=True)
-    
+
+    try:
+        os.makedirs(settings.upload_dir, exist_ok=True)
+    except Exception as e:
+        logger.warning(f"Could not create upload directory {settings.upload_dir}: {e}")
+
     for file in files:
         file_path = os.path.join(settings.upload_dir, file.filename)
         try:
@@ -94,7 +97,10 @@ async def process_and_index_files(filenames: List[str]):
     storage_file = Path(settings.chroma_persist_dir) / "documents.json"
     
     # Create directory if not exists
-    os.makedirs(settings.chroma_persist_dir, exist_ok=True)
+    try:
+        os.makedirs(settings.chroma_persist_dir, exist_ok=True)
+    except Exception as e:
+        logger.warning(f"Could not create chroma persist directory {settings.chroma_persist_dir}: {e}")
     
     if storage_file.exists():
         try:

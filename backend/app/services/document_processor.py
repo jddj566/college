@@ -26,7 +26,10 @@ logger = logging.getLogger(__name__)
 class DocumentProcessor:
     def __init__(self, upload_dir: str = "uploads"):
         self.upload_dir = Path(upload_dir)
-        self.upload_dir.mkdir(exist_ok=True)
+        try:
+            self.upload_dir.mkdir(parents=True, exist_ok=True)
+        except Exception as e:
+            logger.warning(f"Could not create upload directory {upload_dir}: {e}. This is expected on some serverless environments if the path is not /tmp.")
     
     async def process_file(self, file_path: str, metadata: Dict[str, Any] = None) -> List[Dict[str, Any]]:
         """
