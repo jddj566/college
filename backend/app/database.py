@@ -9,12 +9,16 @@ logger = logging.getLogger(__name__)
 DB_PATH = os.path.join(settings.chroma_persist_dir, "conversations.db")
 
 def get_db():
-    """Get database connection with row factory and WAL mode for concurrency"""
+    """Get database connection with row factory and optional WAL mode"""
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
-    # Enable WAL mode for better concurrency
-    conn.execute("PRAGMA journal_mode=WAL")
+    
+    # Enable WAL mode for better concurrency, but disable on Vercel
+    # Vercel's /tmp is writable but ephemeral and may not support WAL optimally
+    if not os.environ.get("VERCEL"):
+        conn.execute("PRAGMA journal_mode=WAL")
+    
     return conn
 
 def init_db():
