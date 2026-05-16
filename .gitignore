@@ -67,3 +67,4 @@ credentials.json
 
 # Custom
 _archive/
+.vercel
